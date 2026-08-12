@@ -14,10 +14,11 @@ import {
   Menu,
   X,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  KeyRound
 } from 'lucide-react';
 
-export type NavTab = 'dashboard' | 'gmail_tracker' | 'domains' | 'profiles' | 'products' | 'expenses' | 'sales' | 'payroll' | 'reports' | 'team';
+export type NavTab = 'dashboard' | 'gmail_tracker' | 'domains' | 'profiles' | 'products' | 'expenses' | 'sales' | 'payroll' | 'reports' | 'team' | 'auth';
 
 interface NavigationProps {
   activeTab: NavTab;
@@ -47,8 +48,8 @@ export const Navigation: React.FC<NavigationProps> = ({
       id: 'gmail_tracker' as NavTab,
       label: 'Gmail Subscriptions',
       icon: Mail,
-      badge: 'LILAC',
-      badgeColor: 'bg-purple-100 text-purple-900 dark:bg-purple-950 dark:text-purple-200 font-bold'
+      badge: 'SYNC',
+      badgeColor: 'bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-200 font-bold'
     },
     {
       id: 'domains' as NavTab,
@@ -99,8 +100,15 @@ export const Navigation: React.FC<NavigationProps> = ({
       label: 'Team & Access',
       icon: Users,
       badge: currentRole === 'owner' && pendingApprovalsCount > 0 ? `${pendingApprovalsCount} Pending` : null,
-      badgeColor: 'bg-purple-200 text-purple-900 dark:bg-purple-900 dark:text-purple-200 font-bold',
+      badgeColor: 'bg-sky-200 text-sky-900 dark:bg-sky-900 dark:text-sky-200 font-bold',
       ownerOnly: true
+    },
+    {
+      id: 'auth' as NavTab,
+      label: 'Account Portal',
+      icon: KeyRound,
+      badge: 'AUTH',
+      badgeColor: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200 font-bold'
     }
   ];
 
@@ -115,29 +123,29 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <>
       {/* Sticky Compact Navigation Bar featuring Hamburger Menu Trigger */}
-      <nav className="bg-white/90 dark:bg-[#180E2B]/90 backdrop-blur-md border-b-2 border-[#A895E8]/40 dark:border-purple-900/40 px-3 sm:px-6 md:px-8 py-2 sticky top-[57px] sm:top-[65px] z-30 transition-colors">
+      <nav className="bg-white/90 dark:bg-[#0F172A]/90 backdrop-blur-md border-b-2 border-sky-300/40 dark:border-blue-900/40 px-3 sm:px-6 md:px-8 py-2 sticky top-[57px] sm:top-[65px] z-30 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           
           {/* Hamburger Menu Toggle Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-600 hover:from-purple-800 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-purple-500/25 active:scale-95 transition-all border border-purple-300/40"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-black text-xs sm:text-sm shadow-md shadow-sky-500/20 active:scale-95 transition-all border border-sky-300/40"
             aria-label="Toggle Navigation Menu"
           >
             {isOpen ? (
-              <X className="w-4 h-4 sm:w-5 sm:h-5 text-amber-200" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-sky-200" />
             ) : (
-              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-amber-200" />
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-sky-200" />
             )}
             <span className="tracking-wide uppercase text-[11px] sm:text-xs">Menu</span>
           </button>
 
           {/* Active Section Label Breadcrumb */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-50/80 dark:bg-[#22153E]/80 border border-purple-200/60 dark:border-purple-800/60 text-purple-950 dark:text-purple-100 text-xs sm:text-sm font-semibold truncate">
-            <ActiveIcon className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-50/80 dark:bg-blue-950/80 border border-sky-200/60 dark:border-blue-800/60 text-slate-900 dark:text-sky-100 text-xs sm:text-sm font-semibold truncate">
+            <ActiveIcon className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0" />
             <span className="truncate">{activeTabObject.label}</span>
             {activeTabObject.badge && (
-              <span className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-extrabold shrink-0 border border-purple-300/40 ${activeTabObject.badgeColor || 'bg-purple-100 text-purple-900'}`}>
+              <span className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-extrabold shrink-0 border border-sky-300/40 ${activeTabObject.badgeColor || 'bg-sky-100 text-sky-900'}`}>
                 {activeTabObject.badge}
               </span>
             )}
@@ -155,8 +163,8 @@ export const Navigation: React.FC<NavigationProps> = ({
                   onClick={() => handleSelectTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap border ${
                     isActive
-                      ? 'bg-purple-600 text-white border-purple-400 shadow-sm'
-                      : 'bg-white/60 dark:bg-[#20133A]/60 text-purple-950/70 dark:text-purple-200/70 border-purple-200/60 dark:border-purple-800/60 hover:border-purple-400'
+                      ? 'bg-sky-600 text-white border-sky-400 shadow-sm'
+                      : 'bg-white/60 dark:bg-blue-950/60 text-slate-800 dark:text-sky-200/70 border-sky-200/60 dark:border-blue-800/60 hover:border-sky-400'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -174,18 +182,18 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className="fixed inset-0 z-50 flex">
           {/* Backdrop Dimmer */}
           <div 
-            className="fixed inset-0 bg-purple-950/60 backdrop-blur-sm transition-opacity animate-fade-in"
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity animate-fade-in"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Slide-out Navigation Drawer */}
-          <div className="relative z-10 w-full max-w-xs sm:max-w-sm bg-white dark:bg-[#160D27] h-full shadow-2xl border-r-2 border-purple-300/40 dark:border-purple-800/60 flex flex-col justify-between animate-slide-in">
+          <div className="relative z-10 w-full max-w-xs sm:max-w-sm bg-white dark:bg-[#0F172A] h-full shadow-2xl border-r-2 border-sky-300/40 dark:border-blue-800/60 flex flex-col justify-between animate-slide-in">
             
             {/* Drawer Header */}
-            <div className="p-4 sm:p-5 border-b border-purple-100 dark:border-purple-900/60 flex items-center justify-between bg-gradient-to-r from-purple-800 to-indigo-800 text-white">
+            <div className="p-4 sm:p-5 border-b border-sky-100 dark:border-blue-900/60 flex items-center justify-between bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-300" />
-                <h2 className="font-serif font-black text-lg tracking-wider">
+                <Sparkles className="w-5 h-5 text-sky-300" />
+                <h2 className="font-black text-lg tracking-wider">
                   Navigation Menu
                 </h2>
               </div>
@@ -194,14 +202,14 @@ export const Navigation: React.FC<NavigationProps> = ({
                 className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
                 aria-label="Close Navigation Menu"
               >
-                <X className="w-5 h-5 text-amber-200" />
+                <X className="w-5 h-5 text-sky-200" />
               </button>
             </div>
 
             {/* Nav Tabs List */}
             <div className="p-3 sm:p-4 space-y-1.5 overflow-y-auto flex-1">
-              <div className="text-[10px] uppercase tracking-wider font-extrabold text-purple-600 dark:text-purple-400 px-3 py-1">
-                Main Views & Workspaces
+              <div className="text-[10px] uppercase tracking-wider font-extrabold text-sky-600 dark:text-sky-400 px-3 py-1">
+                Main Workspaces
               </div>
               {tabs.map(tab => {
                 if (tab.ownerOnly && currentRole !== 'owner') return null;
@@ -215,12 +223,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                     onClick={() => handleSelectTab(tab.id)}
                     className={`w-full flex items-center justify-between p-3 rounded-2xl text-xs sm:text-sm font-bold transition-all border-2 text-left ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#9B87ED] to-[#7D66DC] text-white border-purple-300 shadow-md shadow-purple-500/20 scale-[1.01]'
-                        : 'bg-purple-50/60 dark:bg-[#1E1236]/60 text-purple-950 dark:text-purple-100 border-purple-200/50 dark:border-purple-900/50 hover:bg-purple-100 dark:hover:bg-[#281849] hover:border-purple-400'
+                        ? 'bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white border-sky-300 shadow-md shadow-sky-500/20 scale-[1.01]'
+                        : 'bg-sky-50/60 dark:bg-blue-950/60 text-slate-900 dark:text-sky-100 border-sky-200/50 dark:border-blue-900/50 hover:bg-sky-100 dark:hover:bg-blue-900 hover:border-sky-400'
                     }`}
                   >
                     <div className="flex items-center gap-3 truncate">
-                      <div className={`p-2 rounded-xl ${isActive ? 'bg-white/20 text-amber-200' : 'bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300'}`}>
+                      <div className={`p-2 rounded-xl ${isActive ? 'bg-white/20 text-sky-200' : 'bg-sky-100 dark:bg-blue-900/60 text-sky-600 dark:text-sky-300'}`}>
                         <Icon className="w-4 h-4 shrink-0" />
                       </div>
                       <span className="truncate">{tab.label}</span>
@@ -228,11 +236,11 @@ export const Navigation: React.FC<NavigationProps> = ({
 
                     <div className="flex items-center gap-2 shrink-0">
                       {tab.badge && (
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border border-purple-300/40 ${tab.badgeColor || 'bg-purple-200 text-purple-900'}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border border-sky-300/40 ${tab.badgeColor || 'bg-sky-200 text-sky-900'}`}>
                           {tab.badge}
                         </span>
                       )}
-                      <ChevronRight className={`w-4 h-4 ${isActive ? 'text-amber-200' : 'text-purple-400'}`} />
+                      <ChevronRight className={`w-4 h-4 ${isActive ? 'text-sky-200' : 'text-sky-400'}`} />
                     </div>
                   </button>
                 );
@@ -240,10 +248,10 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
 
             {/* Drawer Footer */}
-            <div className="p-4 border-t border-purple-100 dark:border-purple-900/60 bg-purple-50/50 dark:bg-[#1B1030] text-xs">
-              <div className="flex items-center justify-between text-purple-700 dark:text-purple-300 font-semibold">
-                <span>Role: <strong className="capitalize text-purple-950 dark:text-purple-100">{currentRole}</strong></span>
-                <span className="text-[10px] bg-purple-200 dark:bg-purple-900 px-2 py-0.5 rounded-full font-bold">Psychedelic Hub</span>
+            <div className="p-4 border-t border-sky-100 dark:border-blue-900/60 bg-sky-50/50 dark:bg-blue-950/80 text-xs">
+              <div className="flex items-center justify-between text-sky-700 dark:text-sky-300 font-semibold">
+                <span>Role: <strong className="capitalize text-slate-900 dark:text-sky-100">{currentRole}</strong></span>
+                <span className="text-[10px] bg-sky-200 dark:bg-blue-900 px-2 py-0.5 rounded-full font-bold text-sky-900 dark:text-sky-100">Dreamy Moonlight</span>
               </div>
             </div>
 

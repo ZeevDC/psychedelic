@@ -2,120 +2,133 @@
 
 @layer base {
   body {
-    background-color: #ECE7FB;
-    color: #2D1C45;
+    background-color: #F0F6FF;
+    color: #0F172A;
+  }
+  .dark body {
+    background-color: #0B132B;
+    color: #F8FAFC;
   }
 }
 
-/* Cozy Kawaii & Dreamy Lavender Theme Enhancements */
+/* Dreamy Blue Moonlight Theme Enhancements */
 
-.bg-cozy-pattern {
-  background-color: #EBDFFC;
-  background-image: 
-    radial-gradient(#C4B2F7 1px, transparent 1px),
-    radial-gradient(#D6C8F9 1px, #EBDFFC 1px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
+.bg-[#ECE7FB] {
+  background-color: #F0F6FF !important;
 }
 
-.dark .bg-cozy-pattern {
-  background-color: #120921;
-  background-image: 
-    radial-gradient(#2E1A4E 1px, transparent 1px),
-    radial-gradient(#20103B 1px, #120921 1px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
+.dark .bg-[#120B24], .dark .bg-[#1A112E], .dark .bg-[#180E2B], .dark .bg-[#160D27] {
+  background-color: #0F172A !important;
 }
 
-/* Cozy Window Card Frame */
-.cozy-window {
+.bg-moonlight-pattern {
+  background-color: #F0F6FF;
+  background-image: 
+    radial-gradient(#93C5FD 1.2px, transparent 1.2px),
+    radial-gradient(#38BDF8 1px, #F0F6FF 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+.dark .bg-moonlight-pattern {
+  background-color: #0B132B;
+  background-image: 
+    radial-gradient(#1E3A8A 1.5px, transparent 1.5px),
+    radial-gradient(#0284C7 1px, #0B132B 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+/* Moonlight Window Frame */
+.moonlight-window {
   border-radius: 24px;
-  border: 2px solid #A895E8;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 8px 32px rgba(168, 149, 232, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
+  border: 2px solid #38BDF8;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 32px rgba(56, 189, 248, 0.18), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
 }
 
-.dark .cozy-window {
-  border: 2px solid #523984;
-  background: rgba(26, 15, 46, 0.92);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+.dark .moonlight-window {
+  border: 2px solid #1E3A8A;
+  background: rgba(15, 23, 42, 0.94);
+  box-shadow: 0 8px 32px rgba(2, 132, 199, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.08);
 }
 
-/* Cozy Card */
-.cozy-card {
+/* Moonlight Card */
+.moonlight-card {
   border-radius: 20px;
-  border: 1.5px solid #C4B5F5;
-  background: rgba(252, 250, 255, 0.95);
-  box-shadow: 0 4px 16px rgba(180, 160, 240, 0.12);
+  border: 1.5px solid #BFDBFE;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 16px rgba(147, 197, 253, 0.15);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cozy-card:hover {
+.moonlight-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(168, 149, 232, 0.25);
-  border-color: #9A83EE;
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.25);
+  border-color: #38BDF8;
 }
 
-.dark .cozy-card {
-  border: 1.5px solid #3E2B66;
-  background: rgba(30, 18, 54, 0.95);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+.dark .moonlight-card {
+  border: 1.5px solid #1E293B;
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-.dark .cozy-card:hover {
-  border-color: #7B61C8;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+.dark .moonlight-card:hover {
+  border-color: #0284C7;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.3);
 }
 
-/* Cozy Pill */
-.cozy-pill {
+/* Moonlight Pill */
+.moonlight-pill {
   border-radius: 9999px;
-  border: 1.5px solid #B8A6F4;
-  background: #F4EFFF;
-  color: #4A3378;
+  border: 1.5px solid #93C5FD;
+  background: #E0F2FE;
+  color: #0369A1;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
-.cozy-pill:hover {
-  background: #E8DDFF;
-  border-color: #9C85F0;
+.moonlight-pill:hover {
+  background: #BAE6FD;
+  border-color: #38BDF8;
 }
 
-.dark .cozy-pill {
-  border: 1.5px solid #5A3E92;
-  background: #251642;
-  color: #D3C5F7;
+.dark .moonlight-pill {
+  border: 1.5px solid #1E3A8A;
+  background: #172554;
+  color: #BAE6FD;
 }
 
-.dark .cozy-pill:hover {
-  background: #331F59;
-  border-color: #8468CA;
+.dark .moonlight-pill:hover {
+  background: #1E293B;
+  border-color: #0284C7;
 }
 
-/* Scrollbar Customization for Cozy Feel */
+/* Scrollbar Customization for Moonlight Atmosphere */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #F0E9FC;
+  background: #E0F2FE;
   border-radius: 10px;
 }
-.dark ::webkit-scrollbar-track {
-  background: #180D2D;
+.dark ::-webkit-scrollbar-track {
+  background: #0F172A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #BFAAF0;
+  background: #38BDF8;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9A80E6;
+  background: #0284C7;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #4A3178;
+  background: #1E3A8A;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #6D4CBA;
+  background: #2563EB;
 }
+

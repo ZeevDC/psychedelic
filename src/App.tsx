@@ -13,6 +13,7 @@ import { CustomReportsView } from './components/CustomReportsView';
 import { GmailTrackerView } from './components/GmailTrackerView';
 import { DomainTrackerView } from './components/DomainTrackerView';
 import { AccountProfilesView } from './components/AccountProfilesView';
+import { AuthView } from './components/AuthView';
 import { AuthModal } from './components/AuthModal';
 import { ProfileModal } from './components/ProfileModal';
 
@@ -23,8 +24,8 @@ export default function App() {
   // Active Tab
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
 
-  // User & RBAC state
-  const [currentUser, setCurrentUser] = useState<User | null>(initialUsers[0]); // Elena Vance (Admin)
+  // User & RBAC state (Default to null to strictly require login before accessing the site)
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [currentRole, setCurrentRole] = useState<Role>('admin');
 
   // Modals
@@ -32,14 +33,14 @@ export default function App() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNewSaleOpen, setIsNewSaleOpen] = useState(false);
 
-  // Data Stores (starts from zero as requested)
+  // Data Stores
   const [products, setProducts] = useState<Product[]>([]);
   const [inventoryLogs, setInventoryLogs] = useState<InventoryLog[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [transfers, setTransfers] = useState<FundTransfer[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
   const [payrollRecords, setPayrollRecords] = useState<PayrollRecord[]>([]);
-  const [users, setUsers] = useState<User[]>([initialUsers[0]]);
+  const [users, setUsers] = useState<User[]>([]);
   const [domains, setDomains] = useState<DomainRecord[]>([]);
   const [accountProfiles, setAccountProfiles] = useState<AccountProfileRecord[]>([]);
 
@@ -308,7 +309,7 @@ export default function App() {
   const pendingApprovalsCount = users.filter(u => u.status === 'pending').length;
 
   return (
-    <div className="min-h-screen bg-cozy-pattern text-purple-950 dark:text-purple-100 transition-colors duration-200 font-sans selection:bg-purple-200 dark:selection:bg-purple-900 pb-12">
+    <div className="min-h-screen bg-moonlight-pattern text-slate-900 dark:text-sky-100 transition-colors duration-200 font-sans selection:bg-sky-200 dark:selection:bg-blue-900 pb-12">
       
       {/* Top Header */}
       <Header
@@ -319,115 +320,156 @@ export default function App() {
         onToggleDarkMode={() => setDarkMode(!darkMode)}
         onOpenNewSale={() => { setActiveTab('sales'); setIsNewSaleOpen(true); }}
         onOpenProfile={() => setIsProfileOpen(true)}
-        onOpenAuth={() => setIsAuthOpen(true)}
-        onLogout={() => setCurrentUser(null)}
+        onOpenAuth={() => setActiveTab('auth')}
+        onLogout={() => {
+          setCurrentUser(null);
+          setActiveTab('auth');
+        }}
         lowStockCount={lowStockCount}
         onResetData={handleResetData}
       />
 
-      {/* Main Navigation Bar */}
-      <Navigation
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        currentRole={currentRole}
-        pendingApprovalsCount={pendingApprovalsCount}
-        lowStockCount={lowStockCount}
-      />
+      {/* Main Navigation Bar - Rendered ONLY if user is logged in */}
+      {currentUser && (
+        <Navigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          currentRole={currentRole}
+          pendingApprovalsCount={pendingApprovalsCount}
+          lowStockCount={lowStockCount}
+        />
+      )}
 
       {/* Primary Page Workspace */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 pt-6">
-        {activeTab === 'dashboard' && (
-          <DashboardView
-            kpis={kpis}
-            sales={sales}
-            products={products}
+        {/* If user is NOT logged in, strictly show AuthView gatekeeper portal */}
+        {!currentUser ? (
+          <AuthView
+            currentUser={currentUser}
+            currentRole={currentRole}
+            onLoginSuccess={(user) => {
+              setCurrentUser(user);
+              setCurrentRole(user.role);
+              setActiveTab('dashboard');
+            }}
+            onLogout={() => {
+              setCurrentUser(null);
+            }}
+            onOpenProfile={() => setIsProfileOpen(true)}
             onNavigateTab={(tab) => setActiveTab(tab)}
-            onOpenNewSale={() => { setActiveTab('sales'); setIsNewSaleOpen(true); }}
           />
-        )}
+        ) : (
+          <>
+            {activeTab === 'auth' && (
+              <AuthView
+                currentUser={currentUser}
+                currentRole={currentRole}
+                onLoginSuccess={(user) => {
+                  setCurrentUser(user);
+                  setCurrentRole(user.role);
+                }}
+                onLogout={() => {
+                  setCurrentUser(null);
+                }}
+                onOpenProfile={() => setIsProfileOpen(true)}
+                onNavigateTab={(tab) => setActiveTab(tab)}
+              />
+            )}
 
-        {activeTab === 'gmail_tracker' && (
-          <GmailTrackerView />
-        )}
+            {activeTab === 'dashboard' && (
+              <DashboardView
+                kpis={kpis}
+                sales={sales}
+                products={products}
+                onNavigateTab={(tab) => setActiveTab(tab)}
+                onOpenNewSale={() => { setActiveTab('sales'); setIsNewSaleOpen(true); }}
+              />
+            )}
 
-        {activeTab === 'domains' && (
-          <DomainTrackerView
-            domains={domains}
-            onAddDomain={handleAddDomain}
-            onUpdateDomain={handleUpdateDomain}
-            onDeleteDomain={handleDeleteDomain}
-            onResetDomains={() => setDomains([])}
-          />
-        )}
+            {activeTab === 'gmail_tracker' && (
+              <GmailTrackerView />
+            )}
 
-        {activeTab === 'profiles' && (
-          <AccountProfilesView
-            profiles={accountProfiles}
-            onAddProfile={handleAddProfile}
-            onUpdateProfile={handleUpdateProfile}
-            onDeleteProfile={handleDeleteProfile}
-            onResetProfiles={() => setAccountProfiles([])}
-          />
-        )}
+            {activeTab === 'domains' && (
+              <DomainTrackerView
+                domains={domains}
+                onAddDomain={handleAddDomain}
+                onUpdateDomain={handleUpdateDomain}
+                onDeleteDomain={handleDeleteDomain}
+                onResetDomains={() => setDomains([])}
+              />
+            )}
 
-        {activeTab === 'products' && (
-          <ProductsView
-            products={products}
-            inventoryLogs={inventoryLogs}
-            currentRole={currentRole}
-            onAddProduct={handleAddProduct}
-            onUpdateProduct={handleUpdateProduct}
-            onAdjustStock={handleAdjustStock}
-          />
-        )}
+            {activeTab === 'profiles' && (
+              <AccountProfilesView
+                profiles={accountProfiles}
+                onAddProfile={handleAddProfile}
+                onUpdateProfile={handleUpdateProfile}
+                onDeleteProfile={handleDeleteProfile}
+                onResetProfiles={() => setAccountProfiles([])}
+              />
+            )}
 
-        {activeTab === 'expenses' && (
-          <ExpensesView
-            expenses={expenses}
-            transfers={transfers}
-            onAddExpense={handleAddExpense}
-            onAddTransfer={handleAddTransfer}
-            onUpdateTransferStatus={handleUpdateTransferStatus}
-          />
-        )}
+            {activeTab === 'products' && (
+              <ProductsView
+                products={products}
+                inventoryLogs={inventoryLogs}
+                currentRole={currentRole}
+                onAddProduct={handleAddProduct}
+                onUpdateProduct={handleUpdateProduct}
+                onAdjustStock={handleAdjustStock}
+              />
+            )}
 
-        {activeTab === 'sales' && (
-          <SalesView
-            sales={sales}
-            products={products}
-            users={users}
-            currentUser={currentUser}
-            onAddSale={handleAddSale}
-          />
-        )}
+            {activeTab === 'expenses' && (
+              <ExpensesView
+                expenses={expenses}
+                transfers={transfers}
+                onAddExpense={handleAddExpense}
+                onAddTransfer={handleAddTransfer}
+                onUpdateTransferStatus={handleUpdateTransferStatus}
+              />
+            )}
 
-        {activeTab === 'payroll' && (
-          <PayrollView
-            payrollRecords={payrollRecords}
-            users={users}
-            currentRole={currentRole}
-            currentUser={currentUser}
-            onAddPayroll={handleAddPayroll}
-            onReleasePayroll={handleReleasePayroll}
-          />
-        )}
+            {activeTab === 'sales' && (
+              <SalesView
+                sales={sales}
+                products={products}
+                users={users}
+                currentUser={currentUser}
+                onAddSale={handleAddSale}
+              />
+            )}
 
-        {activeTab === 'reports' && (
-          <CustomReportsView
-            sales={sales}
-            expenses={expenses}
-            payrollRecords={payrollRecords}
-            products={products}
-            users={users}
-          />
-        )}
+            {activeTab === 'payroll' && (
+              <PayrollView
+                payrollRecords={payrollRecords}
+                users={users}
+                currentRole={currentRole}
+                currentUser={currentUser}
+                onAddPayroll={handleAddPayroll}
+                onReleasePayroll={handleReleasePayroll}
+              />
+            )}
 
-        {activeTab === 'team' && (
-          <AdminUsersView
-            users={users}
-            currentRole={currentRole}
-            onUpdateUser={handleUpdateUser}
-          />
+            {activeTab === 'reports' && (
+              <CustomReportsView
+                sales={sales}
+                expenses={expenses}
+                payrollRecords={payrollRecords}
+                products={products}
+                users={users}
+              />
+            )}
+
+            {activeTab === 'team' && (
+              <AdminUsersView
+                users={users}
+                currentRole={currentRole}
+                onUpdateUser={handleUpdateUser}
+              />
+            )}
+          </>
         )}
       </main>
 

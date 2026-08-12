@@ -44,26 +44,26 @@ export const Header: React.FC<HeaderProps> = ({
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#180E2B]/90 backdrop-blur-md border-b-2 border-[#A895E8]/60 dark:border-purple-900/60 px-3 sm:px-6 lg:px-8 py-2 sm:py-2.5 transition-colors duration-200">
+    <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#0F172A]/90 backdrop-blur-md border-b-2 border-sky-300/50 dark:border-blue-900/60 px-3 sm:px-6 lg:px-8 py-2.5 transition-colors duration-200">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
         
         {/* Brand Logo & Tagline */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
           <img
             src="/src/assets/images/psychedelic_logo_1785429226516.jpg"
             alt="Psychedelic Logo"
-            className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl object-cover shadow-md shadow-purple-400/30 border-2 border-purple-200/80 shrink-0"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl object-cover shadow-md shadow-sky-500/20 border-2 border-sky-300/80 shrink-0"
             referrerPolicy="no-referrer"
           />
           <div>
             <div className="flex items-center gap-1.5">
-              <h1 className="text-lg sm:text-2xl font-serif font-black tracking-widest bg-gradient-to-r from-purple-900 via-fuchsia-600 to-indigo-700 dark:from-purple-200 dark:via-fuchsia-300 dark:to-indigo-200 bg-clip-text text-transparent drop-shadow-sm flex items-center gap-1">
-                <span>Psychedelic</span>
-                <span className="text-amber-400 text-[10px] sm:text-xs">✦</span>
+              <h1 className="text-lg sm:text-2xl font-black tracking-wider bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-sky-100 dark:via-sky-200 dark:to-indigo-200 bg-clip-text text-transparent flex items-center gap-1.5">
+                <span>Psychedelic Hub</span>
+                <Moon className="w-4 h-4 text-sky-400 fill-sky-400/20" />
               </h1>
             </div>
-            <p className="text-[10px] sm:text-[11px] text-purple-700/80 dark:text-purple-300/70 hidden sm:block font-medium">
-              Sales, Inventory, Financials, Domains & Subscriptions
+            <p className="text-[10px] sm:text-[11px] text-sky-800/80 dark:text-sky-300/70 hidden sm:block font-medium">
+              Sales, Inventory, Financials & Workspace
             </p>
           </div>
         </div>
@@ -71,36 +71,9 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
 
-          {/* Quick Role Switcher Pill for Demo / RBAC Testing */}
-          <div className="hidden md:flex items-center bg-purple-50/80 dark:bg-purple-950/60 p-1 rounded-xl border border-purple-200/60 dark:border-purple-800/60 text-xs">
-            <span className="text-[11px] font-medium text-purple-600 dark:text-purple-300 px-2 flex items-center gap-1">
-              <Shield className="w-3 h-3" /> Test Role:
-            </span>
-            <button
-              onClick={() => onRoleChange('admin')}
-              className={`px-2.5 py-1 rounded-lg transition-all font-medium flex items-center gap-1 ${
-                currentRole === 'admin'
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50'
-              }`}
-            >
-              Admin
-            </button>
-            <button
-              onClick={() => onRoleChange('staff')}
-              className={`px-2.5 py-1 rounded-lg transition-all font-medium flex items-center gap-1 ${
-                currentRole === 'staff'
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50'
-              }`}
-            >
-              Staff
-            </button>
-          </div>
-
           {/* Data Mode Control (Start Fresh / Zero) */}
-          {onResetData && (
-            <div className="hidden lg:flex items-center gap-1 bg-purple-50/80 dark:bg-purple-950/60 p-1 rounded-xl border border-purple-200/60 dark:border-purple-800/60 text-xs">
+          {currentUser && onResetData && (
+            <div className="hidden lg:flex items-center gap-1 bg-sky-50/80 dark:bg-blue-950/60 p-1 rounded-xl border border-sky-200/80 dark:border-blue-900/60 text-xs">
               <button
                 onClick={() => {
                   if (confirm('Start completely fresh from zero (clear all products, sales, expenses, payroll)?')) {
@@ -112,36 +85,31 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <RefreshCw className="w-3 h-3" /> Start Fresh (0)
               </button>
-              <button
-                onClick={() => onResetData('sample')}
-                className="px-2 py-1 rounded-lg text-purple-600 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/50 font-medium"
-                title="Load sample data"
-              >
-                Load Sample
-              </button>
             </div>
           )}
 
           {/* Quick New Sale POS Button */}
-          <button
-            onClick={onOpenNewSale}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 font-medium text-xs sm:text-sm shadow-md shadow-purple-500/20 active:scale-95 transition-all"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Log Sale</span>
-          </button>
+          {currentUser && (
+            <button
+              onClick={onOpenNewSale}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-sky-500/20 active:scale-95 transition-all"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Log Sale</span>
+            </button>
+          )}
 
-          {/* Dark / Light Lavender Mode Toggle */}
+          {/* Dark / Light Moonlight Theme Toggle */}
           <button
             onClick={onToggleDarkMode}
-            title="Toggle Lavender Theme"
-            className="p-2 rounded-xl bg-purple-50/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800/60 border border-purple-200/50 dark:border-purple-800/50 transition-all"
+            title="Toggle Moonlight Theme"
+            className="p-2 rounded-xl bg-sky-50 dark:bg-blue-950 text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-blue-900 border border-sky-200 dark:border-blue-800 transition-all"
           >
             {darkMode ? <Sun className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4" />}
           </button>
 
           {/* Low Stock Alert Indicator */}
-          {lowStockCount > 0 && (
+          {currentUser && lowStockCount > 0 && (
             <div className="relative" title={`${lowStockCount} items low on stock!`}>
               <div className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
                 <Bell className="w-4 h-4 animate-bounce" />
@@ -157,67 +125,49 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/40 border border-transparent hover:border-purple-200/60 dark:hover:border-purple-800 transition-all"
+                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-sky-50 dark:hover:bg-blue-950 border border-transparent hover:border-sky-200 dark:hover:border-blue-800 transition-all"
               >
-                <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 flex items-center justify-center ring-2 ring-purple-300 dark:ring-purple-700 shadow-sm shrink-0">
-                  <UserIcon className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-sky-500 to-blue-700 text-white flex items-center justify-center font-bold ring-2 ring-sky-300 dark:ring-blue-700 shadow-sm shrink-0">
+                  {currentUser.name.charAt(0)}
                 </div>
                 <div className="text-left hidden lg:block">
-                  <div className="text-xs font-semibold text-purple-950 dark:text-purple-100 leading-tight">
+                  <div className="text-xs font-bold text-slate-900 dark:text-sky-100 leading-tight">
                     {currentUser.name}
                   </div>
-                  <div className="text-[10px] text-purple-600 dark:text-purple-400 capitalize">
-                    {currentRole} Role
+                  <div className="text-[10px] text-sky-600 dark:text-sky-400 capitalize">
+                    {currentRole}
                   </div>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-purple-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-sky-400" />
               </button>
 
               {/* Dropdown Menu */}
               {menuOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#1A112E] border border-purple-100 dark:border-purple-900 shadow-xl shadow-purple-950/10 py-2 z-50">
-                  <div className="px-4 py-2 border-b border-purple-100 dark:border-purple-900/50">
-                    <div className="text-xs font-semibold text-purple-950 dark:text-purple-100">
+                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-[#0F172A] border border-sky-200 dark:border-blue-900 shadow-xl shadow-sky-950/20 py-2 z-50">
+                  <div className="px-4 py-2 border-b border-sky-100 dark:border-blue-900/50">
+                    <div className="text-xs font-extrabold text-slate-900 dark:text-sky-100">
                       {currentUser.name}
                     </div>
-                    <div className="text-[11px] text-purple-500 dark:text-purple-400 truncate">
+                    <div className="text-[11px] text-sky-600 dark:text-sky-400 truncate">
                       {currentUser.email}
                     </div>
                   </div>
 
                   <button
                     onClick={() => { setMenuOpen(false); onOpenProfile(); }}
-                    className="w-full text-left px-4 py-2 text-xs text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-xs text-slate-800 dark:text-sky-200 hover:bg-sky-50 dark:hover:bg-blue-950 flex items-center gap-2"
                   >
                     <UserIcon className="w-3.5 h-3.5" />
                     <span>My Profile & Settings</span>
                   </button>
 
-                  <div className="px-4 py-1.5 md:hidden border-t border-purple-100 dark:border-purple-900/50 mt-1">
-                    <div className="text-[10px] text-purple-400 uppercase font-semibold mb-1">Switch Test Role</div>
-                    <div className="flex gap-1">
-                      <button
-                        onClick={() => { onRoleChange('owner'); setMenuOpen(false); }}
-                        className={`flex-1 py-1 text-[11px] rounded font-bold ${currentRole === 'owner' ? 'bg-purple-600 text-white' : 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'}`}
-                      >
-                        Owner
-                      </button>
-                      <button
-                        onClick={() => { onRoleChange('admin'); setMenuOpen(false); }}
-                        className={`flex-1 py-1 text-[11px] rounded font-bold ${currentRole === 'admin' ? 'bg-purple-600 text-white' : 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'}`}
-                      >
-                        Admin
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-purple-100 dark:border-purple-900/50 mt-1 pt-1">
+                  <div className="border-t border-sky-100 dark:border-blue-900/50 mt-1 pt-1">
                     <button
                       onClick={() => { setMenuOpen(false); onLogout(); }}
-                      className="w-full text-left px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2"
+                      className="w-full text-left px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center gap-2 font-bold"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      <span>Sign Out</span>
+                      <span>Log Out</span>
                     </button>
                   </div>
                 </div>
@@ -226,10 +176,10 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={onOpenAuth}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 hover:bg-purple-200 dark:hover:bg-purple-800 text-xs font-semibold transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-extrabold text-xs shadow-md shadow-sky-500/20 hover:from-sky-600 transition-all"
             >
               <UserCheck className="w-4 h-4" />
-              <span>Sign In / Demo</span>
+              <span>Sign In / Register</span>
             </button>
           )}
 
