@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #ECE7FB;
+    color: #2D1C45;
+  }
+}
+
+/* Cozy Kawaii & Dreamy Lavender Theme Enhancements */
+
+.bg-cozy-pattern {
+  background-color: #EBDFFC;
+  background-image: 
+    radial-gradient(#C4B2F7 1px, transparent 1px),
+    radial-gradient(#D6C8F9 1px, #EBDFFC 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+.dark .bg-cozy-pattern {
+  background-color: #120921;
+  background-image: 
+    radial-gradient(#2E1A4E 1px, transparent 1px),
+    radial-gradient(#20103B 1px, #120921 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+}
+
+/* Cozy Window Card Frame */
+.cozy-window {
+  border-radius: 24px;
+  border: 2px solid #A895E8;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 32px rgba(168, 149, 232, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+}
+
+.dark .cozy-window {
+  border: 2px solid #523984;
+  background: rgba(26, 15, 46, 0.92);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+/* Cozy Card */
+.cozy-card {
+  border-radius: 20px;
+  border: 1.5px solid #C4B5F5;
+  background: rgba(252, 250, 255, 0.95);
+  box-shadow: 0 4px 16px rgba(180, 160, 240, 0.12);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cozy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(168, 149, 232, 0.25);
+  border-color: #9A83EE;
+}
+
+.dark .cozy-card {
+  border: 1.5px solid #3E2B66;
+  background: rgba(30, 18, 54, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.dark .cozy-card:hover {
+  border-color: #7B61C8;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Cozy Pill */
+.cozy-pill {
+  border-radius: 9999px;
+  border: 1.5px solid #B8A6F4;
+  background: #F4EFFF;
+  color: #4A3378;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.cozy-pill:hover {
+  background: #E8DDFF;
+  border-color: #9C85F0;
+}
+
+.dark .cozy-pill {
+  border: 1.5px solid #5A3E92;
+  background: #251642;
+  color: #D3C5F7;
+}
+
+.dark .cozy-pill:hover {
+  background: #331F59;
+  border-color: #8468CA;
+}
+
+/* Scrollbar Customization for Cozy Feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F0E9FC;
+  border-radius: 10px;
+}
+.dark ::webkit-scrollbar-track {
+  background: #180D2D;
+}
+::-webkit-scrollbar-thumb {
+  background: #BFAAF0;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9A80E6;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #4A3178;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6D4CBA;
+}

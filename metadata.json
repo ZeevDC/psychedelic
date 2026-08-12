@@ -1,0 +1,6 @@
+{
+  "name": "Psychedelic",
+  "description": "Full-stack Sales, Inventory, Financials, Expenses, Payroll & Customizable Subscription / Gmail Tracker System.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
