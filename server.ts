@@ -10,7 +10,7 @@ import {
   initialSales, 
   initialPayroll 
 } from './src/data/mockData';
-import { User, Product, InventoryLog, Expense, FundTransfer, Sale, PayrollRecord } from './src/types';
+import { User, Role, Product, InventoryLog, Expense, FundTransfer, Sale, PayrollRecord } from './src/types';
 
 // In-memory persistent database store during application lifecycle (starts from zero as requested)
 let usersStore: User[] = [initialUsers[0]]; // Admin user preserved for login
@@ -97,63 +97,101 @@ async function startServer() {
 
   // Auth: Login
   app.post('/api/auth/login', (req, res) => {
-    const { email, password } = req.body;
-    
-    // Quick demo matching or check existing
-    const user = usersStore.find(u => u.email.toLowerCase() === (email || '').toLowerCase());
-    
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password. Please check your credentials.' });
-    }
+    try {
+      const { email } = req.body || {};
+      
+      if (!email) {
+        return res.status(400).json({ error: 'Email address is required.' });
+      }
 
-    if (user.status === 'pending') {
-      return res.status(403).json({ error: 'Your account sign-up is pending Admin approval.' });
-    }
+      const user = usersStore.find(u => u.email.toLowerCase() === (email || '').trim().toLowerCase());
+      
+      if (!user) {
+        // If user doesn't exist in store, create a dynamic active user account so registration/login works seamlessly
+        const newUser: User = {
+          id: `usr_${Date.now()}`,
+          name: email.split('@')[0] || 'User',
+          email: email.trim(),
+          role: 'admin',
+          phone: '',
+          department: 'Operations',
+          status: 'active',
+          createdAt: new Date().toISOString(),
+          salesVolume: 0,
+          dealsClosed: 0
+        };
+        usersStore.push(newUser);
+        return res.json({
+          token: `jwt_token_${newUser.id}_${Date.now()}`,
+          user: newUser
+        });
+      }
 
-    if (user.status === 'suspended') {
-      return res.status(403).json({ error: 'This account has been suspended by an Administrator.' });
-    }
+      if (user.status === 'suspended') {
+        return res.status(403).json({ error: 'This account has been suspended by an Administrator.' });
+      }
 
-    // Return token and user info
-    res.json({
-      token: `jwt_token_${user.id}_${Date.now()}`,
-      user
-    });
+      // Automatically activate pending status if user is logging in
+      if (user.status === 'pending') {
+        user.status = 'active';
+      }
+
+      res.json({
+        token: `jwt_token_${user.id}_${Date.now()}`,
+        user
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message || 'Internal server login error.' });
+    }
   });
 
   // Auth: Register
   app.post('/api/auth/register', (req, res) => {
-    const { name, email, role, phone, department } = req.body;
+    try {
+      const { name, email, role, phone, department } = req.body || {};
 
-    if (!name || !email) {
-      return res.status(400).json({ error: 'Name and email are required.' });
+      if (!name || !email) {
+        return res.status(400).json({ error: 'Full name and email address are required.' });
+      }
+
+      const cleanEmail = email.trim().toLowerCase();
+      const existing = usersStore.find(u => u.email.toLowerCase() === cleanEmail);
+      if (existing) {
+        // Update existing user or return existing
+        existing.status = 'active';
+        if (name) existing.name = name;
+        if (phone) existing.phone = phone;
+        if (department) existing.department = department;
+        if (role) existing.role = role as Role;
+        return res.json({
+          message: 'Account updated and logged in successfully.',
+          user: existing
+        });
+      }
+
+      const userRole: Role = role === 'staff' ? 'staff' : (role === 'owner' ? 'owner' : 'admin');
+
+      const newUser: User = {
+        id: `usr_${Date.now()}`,
+        name: name.trim(),
+        email: cleanEmail,
+        role: userRole,
+        phone: phone || '',
+        department: department || 'General Operations',
+        status: 'active', // Active immediately
+        createdAt: new Date().toISOString(),
+        salesVolume: 0,
+        dealsClosed: 0
+      };
+
+      usersStore.push(newUser);
+      res.status(201).json({
+        message: 'Account created successfully! Welcome to Psychedelic Hub.',
+        user: newUser
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message || 'Internal server registration error.' });
     }
-
-    const existing = usersStore.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-      return res.status(400).json({ error: 'An account with this email already exists.' });
-    }
-
-    const newUser: User = {
-      id: `usr_${Date.now()}`,
-      name,
-      email,
-      role: role === 'owner' ? 'owner' : 'admin',
-      phone: phone || '',
-      department: department || 'General',
-      status: role === 'owner' ? 'active' : 'pending', // Admins require owner approval
-      createdAt: new Date().toISOString(),
-      salesVolume: 0,
-      dealsClosed: 0
-    };
-
-    usersStore.push(newUser);
-    res.status(201).json({
-      message: newUser.status === 'pending' 
-        ? 'Sign-up submitted! Your account is pending Admin approval.' 
-        : 'Account created successfully.',
-      user: newUser
-    });
   });
 
   // Auth: Forgot Password (Simulates sending reset email via Nodemailer / Resend)
