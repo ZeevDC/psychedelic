@@ -50,20 +50,20 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand Logo & Tagline */}
         <div className="flex items-center gap-2.5 sm:gap-3.5">
           <img
-            src="/src/assets/images/psychedelic_logo_1785429226516.jpg"
-            alt="Psychedelic Logo"
+            src="/src/assets/images/ethereal_logo.png"
+            alt="Ethereal Psyche Logo"
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl object-cover shadow-md shadow-sky-500/20 border-2 border-sky-300/80 shrink-0"
             referrerPolicy="no-referrer"
           />
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="text-lg sm:text-2xl font-black tracking-wider bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 dark:from-sky-100 dark:via-sky-200 dark:to-indigo-200 bg-clip-text text-transparent flex items-center gap-1.5">
-                <span>Psychedelic Hub</span>
+                <span>Ethereal Psyche</span>
                 <Moon className="w-4 h-4 text-sky-400 fill-sky-400/20" />
               </h1>
             </div>
             <p className="text-[10px] sm:text-[11px] text-sky-800/80 dark:text-sky-300/70 hidden sm:block font-medium">
-              Sales, Inventory, Financials & Workspace
+              Premium Digital Subscription Admin Portal
             </p>
           </div>
         </div>

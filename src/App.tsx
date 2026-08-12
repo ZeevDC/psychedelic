@@ -320,7 +320,10 @@ export default function App() {
         onToggleDarkMode={() => setDarkMode(!darkMode)}
         onOpenNewSale={() => { setActiveTab('sales'); setIsNewSaleOpen(true); }}
         onOpenProfile={() => setIsProfileOpen(true)}
-        onOpenAuth={() => setActiveTab('auth')}
+        onOpenAuth={() => {
+          setActiveTab('auth');
+          setIsAuthOpen(true);
+        }}
         onLogout={() => {
           setCurrentUser(null);
           setActiveTab('auth');
